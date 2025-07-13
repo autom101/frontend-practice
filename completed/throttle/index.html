@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Throttled Input</title>
+    <style>
+      /* Basic styling for the page */
+    </style>
+  </head>
+
+  <body>
+    <h1>Throttle Practice</h1>
+    <label for="throttled-input">Text Field</label>
+    <input placeholder="Type some words..." type="text" id="throttled-input" />
+    <div>
+      <span>Throttled text:</span>&nbsp;
+      <span id="throttled-text"> </span>
+    </div>
+
+    <script>
+      const throttle = (func, delay) => {
+        let prevCall = 0;
+        let timeout = null;
+        let prevArgs = null;
+
+        return (...args) => {
+          const curCall = Date.now();
+          const remaining = delay - (curCall - prevCall);
+          prevArgs = args;
+
+          if (remaining <= 0) {
+            if (timeout) {
+              clearTimeout(timeout);
+              timeout = null;
+            }
+
+            prevCall = curCall;
+            func(...args);
+          } else if (!timeout) {
+            timeout = setTimeout(() => {
+              timeout = null;
+              prevCall = Date.now();
+              func(...prevArgs);
+            }, remaining);
+          }
+        }
+      };
+
+      const display = document.querySelector("#throttled-text");
+      const input = document.querySelector("#throttled-input");
+
+      const handleInput = throttle((text) => {
+        display.innerText = text;
+      }, 1000);
+
+      input.addEventListener("input", (e) => {
+        const text = e.target.value;
+        handleInput(text);
+      });
+    </script>
+  </body>
+
+</html>
