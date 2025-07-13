@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise Template</title>
+    <style>
+      /* Basic styling for the page */
+    </style>
+  </head>
+
+  <body>
+    <h1>Debounced Input</h1>
+    <label for="debounced-input">Text Field</label>
+    <input placeholder="Type some words..." type="text" id="debounced-input" />
+    <div>
+      <span>Debounced text:</span>&nbsp;
+      <span id="debounced-text">
+      </span>
+    </div>
+
+    <script>
+      const debounce = (func, delay) => {
+        let timeout;
+
+        return (...args) => {
+          clearTimeout(timeout);
+
+          timeout = setTimeout(() => {
+            func(...args);
+          }, delay);
+        }
+      }
+
+      const display = document.querySelector("#debounced-text");
+      const input = document.querySelector("#debounced-input");
+
+      const handleInput = debounce(e => {
+        display.innerText = e.target.value;
+      }, 1000);
+
+      input.addEventListener("input", handleInput);
+
+    </script>
+  </body>
+
+</html>
